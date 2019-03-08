@@ -1,17 +1,32 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld v-bind:msg="msg"/>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+const ws = new WebSocket("ws://media.local:9229");
 
 export default {
   name: 'app',
   components: {
     HelloWorld
+  },
+  data: function() {
+    return {
+      msg: ""
+    }
+  },
+  methods: {
+    setMessage: function(msg) {
+      const payload = JSON.parse(msg.data);
+      this.msg = `User ${payload.name} signed up using email ${payload.email}`;
+    }
+  },
+  created: function() {
+    ws.addEventListener('message', this.setMessage);
   }
 }
 </script>
