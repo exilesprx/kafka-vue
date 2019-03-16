@@ -27,6 +27,15 @@ export default {
   },
   created: function() {
     ws.addEventListener('message', this.setMessage);
+
+    ws.addEventListener('open', function (event) {
+      ws.send(JSON.stringify(
+        {
+          'event': 'join',
+          'room': 'UserCreated'
+        }
+      ));
+    });
   }
 }
 </script>
